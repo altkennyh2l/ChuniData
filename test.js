@@ -32,8 +32,8 @@ await chartDB.forEach(async (element) => {
       if (element.data.EXP.level.endsWith(".5")) {
         element.data.EXP.level = `${element.data.EXP.level.slice(0, -2)}+`;
       }
-      if (element.data.MAS.level.endsWith(".5")) {
-        element.data.MAS.level = `${element.data.MAS.level.slice(0, -2)}+`;
+      if (element.data.EXP.level.endsWith(".5")) {
+        element.data.EXP.level = `${element.data.EXP.level.slice(0, -2)}+`;
       }
     } else {
       element.data.BAS.level = element.data.BAS.level.toString();
@@ -50,53 +50,14 @@ await chartDB.forEach(async (element) => {
       if (element.data.EXP.level.endsWith(".5")) {
         element.data.EXP.level = `${element.data.EXP.level.slice(0, -2)}+`;
       }
-      if (element.data.MAS.level.endsWith(".5")) {
-        element.data.MAS.level = `${element.data.MAS.level.slice(0, -2)}+`;
+      if (element.data.EXP.level.endsWith(".5")) {
+        element.data.EXP.level = `${element.data.EXP.level.slice(0, -2)}+`;
       }
       if (element.data.ULT.level.endsWith(".5")) {
         element.data.ULT.level = `${element.data.ULT.level.slice(0, -2)}+`;
       }
     }
-    await fetch(
-      `${process.env.URL_OFFICIAL_IMG}${targetOfficialDB.image}`
-    ).then((res) =>
-      res.body.pipe(
-        fs.createWriteStream(
-          `./ChuniChartBundle/jacket/${targetOfficialDB.id}.jpg`
-        )
-      )
-    );
   } else {
-    let title = element.meta.title.slice(0, -3);
-    let targetOfficialDB = officialChartDB.find((obj) => {
-      return obj.title === title && obj.we_star != 0;
-    });
-    element.meta.officialID = targetOfficialDB.id;
-    element.meta.jacket = targetOfficialDB.image;
-    element.data.WE.WE_Star = targetOfficialDB.we_star;
-    element.data.WE.we_kanji = targetOfficialDB.we_kanji;
-    await fetch(
-      `${process.env.URL_OFFICIAL_IMG}${targetOfficialDB.image}`
-    ).then((res) =>
-      res.body.pipe(
-        fs.createWriteStream(
-          `./ChuniChartBundle/jacket/${targetOfficialDB.id}.jpg`
-        )
-      )
-    );
+    return;
   }
 });
-
-let jsonData = JSON.stringify(chartDB);
-
-await fs.writeFile("./ChuniChartBundle/ChartDB.json", jsonData, function (err) {
-  if (err) {
-    console.log(err);
-  }
-});
-
-var output = fs.createWriteStream("ChuniChartDB.zip");
-var archive = archiver("zip");
-await archive.directory("./ChuniChartBundle", false);
-archive.pipe(output);
-archive.finalize();
