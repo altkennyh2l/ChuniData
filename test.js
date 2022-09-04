@@ -1,5 +1,6 @@
 import fs from "fs";
 import fetch from "node-fetch";
+import archiver from "archiver";
 import dotenv from "dotenv";
 dotenv.config();
 

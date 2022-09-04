@@ -1,5 +1,6 @@
 import fs from "fs";
 import fetch from "node-fetch";
+import archiver from "archiver";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -9,7 +10,7 @@ let chartDB = await chartDB_json.json();
 let officialChartDB_json = await fetch(process.env.URL_OFFICIAL_JSON);
 let officialChartDB = await officialChartDB_json.json();
 
-chartDB.forEach(async (element) => {
+await chartDB.forEach(async (element) => {
   if (element.meta.genre != "WORLD'S END") {
     let title = element.meta.title;
     let targetOfficialDB = officialChartDB.find((obj) => {
@@ -49,8 +50,14 @@ chartDB.forEach(async (element) => {
 
 let jsonData = JSON.stringify(chartDB);
 
-fs.writeFile("./ChuniChartBundle/ChartDB.json", jsonData, function (err) {
+await fs.writeFile("./ChuniChartBundle/ChartDB.json", jsonData, function (err) {
   if (err) {
     console.log(err);
   }
 });
+
+var output = fs.createWriteStream("ChuniChartDB.zip");
+var archive = archiver("zip");
+await archive.directory("./ChuniChartBundle", false);
+archive.pipe(output);
+archive.finalize();
