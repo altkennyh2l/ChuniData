@@ -89,16 +89,27 @@ await chartDB.forEach(async (element) => {
 
 let jsonData = JSON.stringify(chartDB);
 
-await fs.writeFile("./ChuniChartBundle/ChartDB.json", jsonData, function (err) {
-  if (err) {
-    console.log(err);
-  }
-});
+let exisitingJSON = fs.readFileSync("./ChuniChartBundle/ChartDB.json");
+let compareExistingTarget = JSON.stringify(JSON.parse(exisitingJSON));
 
-var output = fs.createWriteStream(
-  `ChuniChartDB_${new Date().toLocaleDateString("sv").replaceAll("-", "")}.zip`
-);
-var archive = archiver("zip");
-await archive.directory("./ChuniChartBundle", false);
-archive.pipe(output);
-archive.finalize();
+if (!fs.existsSync("ChuniChartDB*") || jsonData !== compareExistingTarget) {
+  await fs.writeFile(
+    "./ChuniChartBundle/ChartDB.json",
+    jsonData,
+    function (err) {
+      if (err) {
+        console.log(err);
+      }
+    }
+  );
+
+  var output = fs.createWriteStream(
+    `ChuniChartDB_${new Date()
+      .toLocaleDateString("sv")
+      .replaceAll("-", "")}.zip`
+  );
+  var archive = archiver("zip");
+  await archive.directory("./ChuniChartBundle", false);
+  archive.pipe(output);
+  archive.finalize();
+}
