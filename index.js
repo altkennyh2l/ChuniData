@@ -89,10 +89,7 @@ await chartDB.forEach(async (element) => {
 
 let jsonData = JSON.stringify(chartDB);
 
-let exisitingJSON = fs.readFileSync("./ChuniChartBundle/ChartDB.json");
-let compareExistingTarget = JSON.stringify(JSON.parse(exisitingJSON));
-
-if (!fs.existsSync("ChuniChartDB*") || jsonData !== compareExistingTarget) {
+const createBundle = async function () {
   await fs.writeFile(
     "./ChuniChartBundle/ChartDB.json",
     jsonData,
@@ -112,4 +109,14 @@ if (!fs.existsSync("ChuniChartDB*") || jsonData !== compareExistingTarget) {
   await archive.directory("./ChuniChartBundle", false);
   archive.pipe(output);
   archive.finalize();
+};
+
+if (!fs.existsSync("ChuniChartDB*")) {
+  createBundle();
+} else {
+  let exisitingJSON = fs.readFileSync("./ChuniChartBundle/ChartDB.json");
+  let compareExistingTarget = JSON.stringify(JSON.parse(exisitingJSON));
+  if (compareExistingTarget !== jsonData) {
+    createBundle();
+  }
 }
