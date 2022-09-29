@@ -95,7 +95,9 @@ await fs.writeFile("./ChuniChartBundle/ChartDB.json", jsonData, function (err) {
   }
 });
 
-var output = fs.createWriteStream("ChuniChartDB.zip");
+var output = fs.createWriteStream(
+  `ChuniChartDB_${new Date().toLocaleDateString("sv").replaceAll("-", "")}.zip`
+);
 var archive = archiver("zip");
 await archive.directory("./ChuniChartBundle", false);
 archive.pipe(output);
