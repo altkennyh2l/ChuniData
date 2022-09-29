@@ -87,6 +87,8 @@ Chart data JSON sample (World's END):
 
 Note: By bundling with this script "officialID" and "jacket" (from official source) will be added to "meta" (from UniDB), and jacket image is named as stated. "OfficialID" is the official chart ID, WE charts have different ID with regular charts (Ultima included). In some cases, WE charts may have different jacket with regular charts.
 
+Note 2: In the original data from UniDB, the chart diff (not const) with "+" (e.g. 14+) are represented as ".5" (14.5) as the item is a number. In the data processed by this script, diff is converted to strings and are represented as "+" when applicable. 
+
 This repo, is NOT associated with SEGA, developers of Chunithm, developers of ChuniRec (and UniDB) and do not encourage the misuse of data. All bundled data is from public sources, please contact if there is any problem regarding copyrights and/or TOS violation of any services (related to this repo). (As stated in MIT License) In no event shall the author be liable for any special, direct, indirect, or consequential damages or any damages
 whatsoever resulting from loss of use, data or profits, whether in an
 action of contract, negligence or other tortious action, arising out of
@@ -180,5 +182,7 @@ or in connection with the use or performance of this software.
 ```
 
 補足：当スクリプトを使用する場合、ウニDBのデータに"officialID"（公式譜面ID）と"jacket"（アルバムアートファイル名）が"meta"に追加されます。アルバムアートファイル名は"jacket"通りです。公式譜面IDについて、WORLD'S END譜面は別エンティティとして登録されており、IDが異なります（なお、Ultimaは一般譜面として扱っています）。また、一部のWE譜面は異なるアルバムアートになってる場合があります。
+
+補足2：ウニDBのデータに、譜面難易度（定数ではありません）が"+"の場合（例：14+）、".5"表記（例：14.5）になっています（該当項目は数字のため）。当スクリプトはそれをストリングに戻し、"+"表記に戻しています。
 
 当スクリプトは、セガ、チュウニズム開発者及びChuniRec運営（ウニDB含む）の方々と一切関係ありません。取得するデータすべてはネット上で公開されているものですが、悪用しないでください。また、もし当スクリプトについて、著作権の侵害や、利用契約の違反がありましたら、ご連絡をいただければ幸いです。(MIT Licenseより) 作者または著作権者は、契約行為、不法行為、またはそれ以外であろうと、ソフトウェアに起因または関連し、あるいはソフトウェアの使用またはその他の扱いによって生じる一切の請求、損害、その他の義務について何らの責任も負わないものとします。
