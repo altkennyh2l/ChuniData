@@ -71,6 +71,9 @@ await chartDB.forEach(async (element) => {
     let targetOfficialDB = officialChartDB.find((obj) => {
       return obj.title === title && obj.we_star != 0;
     });
+    if (!targetOfficialDB) {
+      return;
+    }
     element.meta.officialID = targetOfficialDB.id;
     element.meta.jacket = targetOfficialDB.image;
     element.data.WE.WE_Star = targetOfficialDB.we_star;
