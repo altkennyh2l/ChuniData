@@ -93,6 +93,8 @@ await chartDB.forEach(async (element) => {
 
 async function validateJacketImages() {
   let jacketImages = [];
+  let validCount = 0;
+  let invalidCount = 0;
   const checkImageValidity = (file_path) => sharp(file_path).toBuffer();
 
   fs.readdirSync("./ChuniChartBundle/jacket").forEach((file) => {
@@ -103,16 +105,20 @@ async function validateJacketImages() {
 
   jacketImages.forEach((file_name) => {
     checkImageValidity("ChuniChartBundle/jacket/" + file_name)
-      .then()
-      .catch((err) =>
+      .then(validCount++)
+      .catch((err) => {
+        invalidCount++;
         console.log(
           "[Jacket Image Validation][Warning] Invalid image detected:",
           file_name,
           " Error:",
           err
-        )
-      );
+        );
+      });
   });
+  console.log(
+    `Completed image validation check for jackets. ${validCount} passed, ${invalidCount} failed`
+  );
 }
 
 validateJacketImages();
