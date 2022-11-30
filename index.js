@@ -2,6 +2,7 @@ import fs from "fs";
 import fetch from "node-fetch";
 import archiver from "archiver";
 import dotenv from "dotenv";
+import sharp from "sharp";
 dotenv.config();
 
 let chartDB_json = await fetch(process.env.REQUEST_URL);
@@ -57,6 +58,9 @@ await chartDB.forEach(async (element) => {
     let targetOfficialDB = officialChartDB.find((obj) => {
       return obj.title === title && obj.we_star != 0;
     });
+    if (!targetOfficialDB) {
+      return;
+    }
     element.meta.officialID = targetOfficialDB.id;
     element.meta.jacket = targetOfficialDB.image;
     element.data.WE.WE_Star = targetOfficialDB.we_star;
@@ -72,6 +76,38 @@ await chartDB.forEach(async (element) => {
     );
   }
 });
+
+async function validateJacketImages() {
+  let jacketImages = [];
+  let validCount = 0;
+  let invalidCount = 0;
+  const checkImageValidity = (file_path) => sharp(file_path).toBuffer();
+
+  fs.readdirSync("./ChuniChartBundle/jacket").forEach((file) => {
+    jacketImages.push(file);
+  });
+
+  jacketImages.splice(jacketImages.indexOf(".gitignore"), 1);
+
+  jacketImages.forEach((file_name) => {
+    checkImageValidity("ChuniChartBundle/jacket/" + file_name)
+      .then(validCount++)
+      .catch((err) => {
+        invalidCount++;
+        console.log(
+          "[Jacket Image Validation][Warning] Invalid image detected:",
+          file_name,
+          " Error:",
+          err
+        );
+      });
+  });
+  console.log(
+    `Completed image validation check for jackets. ${validCount} passed, ${invalidCount} failed`
+  );
+}
+
+validateJacketImages();
 
 let jsonData = JSON.stringify(chartDB);
 
