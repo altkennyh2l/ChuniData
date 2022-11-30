@@ -2,6 +2,7 @@ import fs from "fs";
 import fetch from "node-fetch";
 import archiver from "archiver";
 import dotenv from "dotenv";
+import sharp from "sharp";
 dotenv.config();
 
 let chartDB_json = await fetch(process.env.REQUEST_URL);
@@ -89,6 +90,32 @@ await chartDB.forEach(async (element) => {
     );
   }
 });
+
+async function validateJacketImages() {
+  let jacketImages = [];
+  const checkImageValidity = (file_path) => sharp(file_path).toBuffer();
+
+  fs.readdirSync("./ChuniChartBundle/jacket").forEach((file) => {
+    jacketImages.push(file);
+  });
+
+  jacketImages.splice(jacketImages.indexOf(".gitignore"), 1);
+
+  jacketImages.forEach((file_name) => {
+    checkImageValidity("ChuniChartBundle/jacket/" + file_name)
+      .then()
+      .catch((err) =>
+        console.log(
+          "[Jacket Image Validation][Warning] Invalid image detected:",
+          file_name,
+          " Error:",
+          err
+        )
+      );
+  });
+}
+
+validateJacketImages();
 
 let jsonData = JSON.stringify(chartDB);
 
