@@ -104,8 +104,8 @@ const createBundle = async function () {
 if (!fs.existsSync("ChuniChartDB*")) {
   createBundle();
 } else {
-  let exisitingJSON = fs.readFileSync("./ChuniChartBundle/ChartDB.json");
-  let compareExistingTarget = JSON.stringify(JSON.parse(exisitingJSON));
+  let existingJSON = fs.readFileSync("./ChuniChartBundle/ChartDB.json");
+  let compareExistingTarget = JSON.stringify(JSON.parse(existingJSON));
   if (compareExistingTarget !== jsonData) {
     createBundle();
   }
