@@ -2,7 +2,6 @@ import fs from "fs";
 import fetch from "node-fetch";
 import archiver from "archiver";
 import dotenv from "dotenv";
-import sharp from "sharp";
 dotenv.config();
 
 let chartDB_json = await fetch(process.env.REQUEST_URL);
@@ -55,22 +54,22 @@ await chartDB.forEach(async (element) => {
     );
   } else {
     let title = element.meta.title.slice(0, -3);
-    let targetOfficialDB = officialChartDB.find((obj) => {
+    let referenceOfficialDBItem = officialChartDB.find((obj) => {
       return obj.title === title && obj.we_star != 0;
     });
-    if (!targetOfficialDB) {
+    if (!referenceOfficialDBItem) {
       return;
     }
-    element.meta.officialID = targetOfficialDB.id;
-    element.meta.jacket = targetOfficialDB.image;
-    element.data.WE.WE_Star = targetOfficialDB.we_star;
-    element.data.WE.we_kanji = targetOfficialDB.we_kanji;
+    element.meta.officialID = referenceOfficialDBItem.id;
+    element.meta.jacket = referenceOfficialDBItem.image;
+    element.data.WE.WE_Star = referenceOfficialDBItem.we_star;
+    element.data.WE.we_kanji = referenceOfficialDBItem.we_kanji;
     await fetch(
-      `${process.env.URL_OFFICIAL_IMG}${targetOfficialDB.image}`
+      `${process.env.URL_OFFICIAL_IMG}${referenceOfficialDBItem.image}`
     ).then((res) =>
       res.body.pipe(
         fs.createWriteStream(
-          `./ChuniChartBundle/jacket/${targetOfficialDB.id}.jpg`
+          `./ChuniChartBundle/jacket/${referenceOfficialDBItem.id}.jpg`
         )
       )
     );
