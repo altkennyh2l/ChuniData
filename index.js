@@ -34,22 +34,22 @@ const element = {
 await chartDB.forEach(async (element) => {
   if (element.meta.genre != "WORLD'S END") {
     let title = element.meta.title;
-    let targetOfficialDB = officialChartDB.find((obj) => {
+    let referenceOfficialDBItem = officialChartDB.find((obj) => {
       return obj.title === title;
     });
-    element.meta.officialID = targetOfficialDB.id;
-    element.meta.jacket = targetOfficialDB.image;
+    element.meta.officialID = referenceOfficialDBItem.id;
+    element.meta.jacket = referenceOfficialDBItem.image;
 
     for (const [key, val] of Object.entries(element.data)) {
       element.data[key].level = val.level.toString().replace(/\.5$/u, "+");
     }
 
     await fetch(
-      `${process.env.URL_OFFICIAL_IMG}${targetOfficialDB.image}`
+      `${process.env.URL_OFFICIAL_IMG}${referenceOfficialDBItem.image}`
     ).then((res) =>
       res.body.pipe(
         fs.createWriteStream(
-          `./ChuniChartBundle/jacket/${targetOfficialDB.id}.jpg`
+          `./ChuniChartBundle/jacket/${referenceOfficialDBItem.id}.jpg`
         )
       )
     );
